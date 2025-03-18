@@ -31,7 +31,7 @@ const StockTable: React.FC<StockTableProps> = ({ openModal }) => {
                 <td>{stock.symbol}</td>
                 <td>{stock.currentPrice}</td>
                 <td>{stock.dailyChange.toFixed(2)}%</td>
-                <td>—</td>{" "}
+                <td>{stock.quantityHeld}</td>
                 <div className="button-container">
                   <button onClick={() => openModal(stock.symbol)}>
                     Buy/Sell

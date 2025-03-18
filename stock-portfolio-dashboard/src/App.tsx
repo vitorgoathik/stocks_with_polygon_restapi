@@ -9,42 +9,19 @@ import "./styles/app.css";
 
 const App: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  const [selectedStockSymbol, setSelectedStockSymbol] = useState<string | null>(
-    null,
-  );
-  const [showSymbolInput, setShowSymbolInput] = useState<boolean>(false);
-  const [symbolInput, setSymbolInput] = useState<string>("");
-  const [quantityInput, setQuantityInput] = useState<number>(0);
+  const [selectedSymbol, setSelectedSymbol] = useState<string>("");
 
   const openModalWithSymbolInput = () => {
-    setShowSymbolInput(true);
-    setSelectedStockSymbol(null);
     setModalOpen(true);
   };
 
   const openModalWithSelectedSymbol = (symbol: string) => {
-    setShowSymbolInput(false);
-    setSelectedStockSymbol(symbol);
+    setSelectedSymbol(symbol);
     setModalOpen(true);
   };
 
   const closeModal = () => {
-    setModalOpen(false);
-    setSelectedStockSymbol(null);
-    setShowSymbolInput(false);
-  };
-
-  const handleSymbolInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSymbolInput(e.target.value);
-  };
-
-  const handleQuantityInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setQuantityInput(Number(e.target.value));
-  };
-
-  const handleSubmitSymbolAndQuantity = () => {
+    setSelectedSymbol("");
     setModalOpen(false);
   };
 
@@ -63,14 +40,8 @@ const App: React.FC = () => {
 
           {isModalOpen && (
             <StockModal
-              symbol={selectedStockSymbol}
-              showSymbolInput={showSymbolInput}
               closeModal={closeModal}
-              symbolInput={symbolInput}
-              quantityInput={quantityInput}
-              handleSymbolInputChange={handleSymbolInputChange}
-              handleQuantityInputChange={handleQuantityInputChange}
-              handleSubmit={handleSubmitSymbolAndQuantity}
+              selectedSymbol={selectedSymbol}
             />
           )}
         </div>

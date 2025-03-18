@@ -1,48 +1,50 @@
 import React, { useState, useEffect } from "react";
-
 import { usePortfolio } from "../context/PortfolioContext";
 
 interface StockModalProps {
-  symbol: string | null;
-  showSymbolInput: boolean;
   closeModal: () => void;
-  symbolInput: string;
-  quantityInput: number;
-  handleSymbolInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleQuantityInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: () => void;
+  selectedSymbol: string;
 }
 
 const StockModal: React.FC<StockModalProps> = ({
-  symbol,
-  showSymbolInput,
   closeModal,
-  symbolInput,
-  quantityInput,
-  handleSymbolInputChange,
-  handleQuantityInputChange,
-  handleSubmit,
+  selectedSymbol,
 }) => {
-  const { portfolio } = usePortfolio(); // Fetch portfolio here
+  const { portfolio, updateStockQuantity } = usePortfolio();
 
-  const [quantity, setQuantity] = useState<number>(quantityInput);
+  const [symbol, setSymbol] = useState<string>(selectedSymbol);
+  const [quantity, setQuantity] = useState<number>(0);
+
   const [validSymbol, setValidSymbol] = useState<boolean>(true);
 
   useEffect(() => {
-    if (showSymbolInput && symbolInput) {
-      const stockExists = portfolio.some(
-        (stock) => stock.symbol === symbolInput,
-      );
-      setValidSymbol(stockExists); // Validate symbol existence
+    if (symbol) {
+      const stockExists = portfolio.some((stock) => stock.symbol === symbol);
+      setValidSymbol(stockExists);
     }
-  }, [showSymbolInput, symbolInput, portfolio]);
+  }, [symbol, portfolio]);
+
+  const handleQuantityInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = e.target.value;
+    const parsedValue = value ? parseInt(value, 10) : 0;
+    setQuantity(parsedValue);
+  };
 
   const handleQuantitySubmit = () => {
     if (isNaN(quantity)) {
       alert("Invalid quantity");
       return;
     }
-    handleSubmit(); // Call the parent submit function to update the portfolio
+
+    const matchingStock = portfolio.find((stock) => stock.symbol === symbol);
+    if (matchingStock) {
+      updateStockQuantity(symbol, quantity);
+    } else {
+      alert("Symbol not found in portfolio.");
+    }
+
     closeModal();
   };
 
@@ -50,18 +52,19 @@ const StockModal: React.FC<StockModalProps> = ({
     <div className="modal">
       <div className="modal-content">
         <h2>
-          {showSymbolInput
+          {selectedSymbol
             ? "Update Stock Quantity"
-            : `Modify Quantity for ${symbol}`}
+            : `Modify Quantity for ${selectedSymbol}`}
         </h2>
 
-        {/* Symbol input (if showSymbolInput is true) */}
-        {showSymbolInput && (
+        {!selectedSymbol && (
           <>
             <input
               type="text"
-              value={symbolInput}
-              onChange={handleSymbolInputChange}
+              value={symbol}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSymbol(e.target.value)
+              }
               placeholder="Enter stock symbol"
             />
             {!validSymbol && (
@@ -78,14 +81,13 @@ const StockModal: React.FC<StockModalProps> = ({
           </>
         )}
 
-        {/* If showSymbolInput is false, we only show quantity input */}
-        {!showSymbolInput && (
+        {selectedSymbol && (
           <>
-            <p>Current Symbol: {symbol}</p>
+            <p>Current Symbol: {selectedSymbol}</p>
             <input
               type="number"
               value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
+              onChange={handleQuantityInputChange}
               placeholder="Enter quantity"
             />
           </>
@@ -93,7 +95,7 @@ const StockModal: React.FC<StockModalProps> = ({
 
         <button
           onClick={handleQuantitySubmit}
-          disabled={!validSymbol && showSymbolInput}
+          disabled={!validSymbol && symbol !== null}
         >
           Update
         </button>
