@@ -23,23 +23,23 @@ const StockTable: React.FC<StockTableProps> = ({ openModal }) => {
         <tbody>
           {portfolio.length === 0 ? (
             <tr>
-              <td colSpan={5}>No stocks in your portfolio</td>
+              <td colSpan={5}>Loading...</td>
             </tr>
           ) : (
             portfolio.map((stock) => (
               <tr key={stock.symbol}>
                 <td>{stock.symbol}</td>
                 <td>{stock.currentPrice}</td>
-                <td>{stock.dailyChange}</td>
-                <td>{stock.quantityHeld}</td>
-                <td>
+                <td>{stock.dailyChange.toFixed(2)}%</td>
+                <td>—</td>{" "}
+                <div className="button-container">
                   <button onClick={() => openModal(stock.symbol)}>
                     Buy/Sell
                   </button>
                   <button onClick={() => removeStock(stock.symbol)}>
                     Remove
                   </button>
-                </td>
+                </div>
               </tr>
             ))
           )}

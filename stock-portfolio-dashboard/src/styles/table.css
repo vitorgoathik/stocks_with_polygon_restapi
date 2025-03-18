@@ -19,6 +19,8 @@
   padding: 12px;
   text-align: center;
   font-size: 16px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
 }
 
 .stock-table th {
@@ -28,7 +30,6 @@
 }
 
 .stock-table td {
-  border-bottom: 1px solid #ddd;
 }
 
 .stock-table tr:nth-child(even) {
@@ -39,6 +40,15 @@
   background-color: #ddd;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  margin-top: 6px;
+}
+
 .stock-table button {
   padding: 8px 16px;
   background-color: #4caf50;
@@ -47,7 +57,6 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 10px;
 }
 
 .stock-table button:hover {
@@ -59,7 +68,6 @@
   cursor: not-allowed;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   .stock-table table {
     font-size: 14px;
