@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
 import { PortfolioProvider } from './context/PortfolioContext';
+import { StockDataProvider } from './context/StockDataContext';
 import StockTable from './components/StockTable';
 import StockModal from './components/StockModal';
+import './styles/modal.css';
 
 const App: React.FC = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedStockSymbol, setSelectedStockSymbol] = useState<string | null>(null);
 
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const openModal = (symbol: string) => {
+    setSelectedStockSymbol(symbol);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedStockSymbol(null);
+  };
 
   return (
-    <PortfolioProvider>
-      <div className="app">
-        <h1>Stock Portfolio</h1>
-        <button onClick={openModal}>Buy/Sell Stock</button>
-        <StockTable />
-        {isModalOpen && <StockModal closeModal={closeModal} />}
-      </div>
-    </PortfolioProvider>
+    <StockDataProvider>
+      <PortfolioProvider>
+        <div className="app">
+          <h1>Stock Portfolio</h1>
+          <StockTable openModal={openModal} />
+          
+          {isModalOpen && selectedStockSymbol && (
+            <StockModal
+              symbol={selectedStockSymbol}
+              closeModal={closeModal}
+            />
+          )}
+        </div>
+      </PortfolioProvider>
+    </StockDataProvider>
   );
 };
 

@@ -1,8 +1,12 @@
-import React, { createContext, useState, ReactNode, useContext } from 'react';
+import React, { createContext, useState, ReactNode, useContext, useEffect } from 'react';
+import { useStockData } from './StockDataContext';
 import { Stock } from '../types/Stock';
 
 interface PortfolioContextType {
-  stocks: Stock[];
+  portfolio: Stock[];
+  addStock: (symbol: string, quantity: number) => void;
+  updateStockQuantity: (symbol: string, quantity: number) => void;
+  removeStock: (symbol: string) => void;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
@@ -12,10 +16,40 @@ interface PortfolioProviderProps {
 }
 
 export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }) => {
-  const [stocks, setStocks] = useState<Stock[]>([]);
+  const { stockData } = useStockData();
+  const [portfolio, setPortfolio] = useState<Stock[]>(stockData);
+
+  const addStock = (symbol: string, quantity: number) => {
+    const stock = stockData.find((stock) => stock.symbol === symbol);
+    if (stock) {
+      setPortfolio((prevPortfolio) => [
+        ...prevPortfolio,
+        { ...stock, quantityHeld: quantity },
+      ]);
+    }
+  };
+
+  const updateStockQuantity = (symbol: string, quantity: number) => {
+    setPortfolio((prevPortfolio) =>
+      prevPortfolio.map((stock) =>
+        stock.symbol === symbol
+          ? {
+              ...stock,
+              quantityHeld: stock.quantityHeld + quantity >= 0
+                ? stock.quantityHeld + quantity
+                : stock.quantityHeld,
+            }
+          : stock
+      )
+    );
+  };
+
+  const removeStock = (symbol: string) => {
+    setPortfolio((prevPortfolio) => prevPortfolio.filter((stock) => stock.symbol !== symbol));
+  };
 
   return (
-    <PortfolioContext.Provider value={{ stocks }}>
+    <PortfolioContext.Provider value={{ portfolio, addStock, updateStockQuantity, removeStock }}>
       {children}
     </PortfolioContext.Provider>
   );
