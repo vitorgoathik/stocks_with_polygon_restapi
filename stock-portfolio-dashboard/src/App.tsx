@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { PortfolioProvider } from './context/PortfolioContext';
+import StockTable from './components/StockTable';
+import StockModal from './components/StockModal';
 
-function App() {
+const App: React.FC = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <PortfolioProvider>
+      <div className="app">
+        <h1>Stock Portfolio</h1>
+        <button onClick={openModal}>Buy/Sell Stock</button>
+        <StockTable />
+        {isModalOpen && <StockModal closeModal={closeModal} />}
+      </div>
+    </PortfolioProvider>
   );
-}
+};
 
 export default App;
