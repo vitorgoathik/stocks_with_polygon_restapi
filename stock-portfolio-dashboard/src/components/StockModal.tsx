@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { usePortfolio } from '../context/PortfolioContext';
+import React, { useState, useEffect } from "react";
+import { usePortfolio } from "../context/PortfolioContext";
 
 interface StockModalProps {
   symbol: string;
@@ -10,7 +10,7 @@ const StockModal: React.FC<StockModalProps> = ({ symbol, closeModal }) => {
   const { portfolio, updateStockQuantity } = usePortfolio();
   const [quantity, setQuantity] = useState<number>(0);
   const stock = portfolio.find((stock) => stock.symbol === symbol);
-  
+
   const currentQuantity = stock ? stock.quantityHeld : 0;
 
   const handleSubmit = () => {

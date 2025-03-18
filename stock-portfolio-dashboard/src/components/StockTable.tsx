@@ -1,5 +1,5 @@
-import React from 'react';
-import { usePortfolio } from '../context/PortfolioContext';
+import React from "react";
+import { usePortfolio } from "../context/PortfolioContext";
 
 interface StockTableProps {
   openModal: (symbol: string) => void;
@@ -22,7 +22,9 @@ const StockTable: React.FC<StockTableProps> = ({ openModal }) => {
         </thead>
         <tbody>
           {portfolio.length === 0 ? (
-            <tr><td colSpan={5}>No stocks in your portfolio</td></tr>
+            <tr>
+              <td colSpan={5}>No stocks in your portfolio</td>
+            </tr>
           ) : (
             portfolio.map((stock) => (
               <tr key={stock.symbol}>
@@ -31,8 +33,12 @@ const StockTable: React.FC<StockTableProps> = ({ openModal }) => {
                 <td>{stock.dailyChange}</td>
                 <td>{stock.quantityHeld}</td>
                 <td>
-                  <button onClick={() => openModal(stock.symbol)}>Buy/Sell</button>
-                  <button onClick={() => removeStock(stock.symbol)}>Remove</button>
+                  <button onClick={() => openModal(stock.symbol)}>
+                    Buy/Sell
+                  </button>
+                  <button onClick={() => removeStock(stock.symbol)}>
+                    Remove
+                  </button>
                 </td>
               </tr>
             ))
@@ -43,4 +49,4 @@ const StockTable: React.FC<StockTableProps> = ({ openModal }) => {
   );
 };
 
-export default StockTable;  
+export default StockTable;

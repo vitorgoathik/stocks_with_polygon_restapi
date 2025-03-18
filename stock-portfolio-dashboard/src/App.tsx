@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
-import { PortfolioProvider } from './context/PortfolioContext';
-import { StockDataProvider } from './context/StockDataContext';
-import StockTable from './components/StockTable';
-import StockModal from './components/StockModal';
-import './styles/modal.css';
+import React, { useState } from "react";
+import { PortfolioProvider } from "./context/PortfolioContext";
+import { StockDataProvider } from "./context/StockDataContext";
+import StockTable from "./components/StockTable";
+import StockModal from "./components/StockModal";
+import "./styles/modal.css";
+import "./styles/table.css";
 
 const App: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  const [selectedStockSymbol, setSelectedStockSymbol] = useState<string | null>(null);
+  const [selectedStockSymbol, setSelectedStockSymbol] = useState<string | null>(
+    null,
+  );
 
   const openModal = (symbol: string) => {
     setSelectedStockSymbol(symbol);
@@ -25,12 +28,9 @@ const App: React.FC = () => {
         <div className="app">
           <h1>Stock Portfolio</h1>
           <StockTable openModal={openModal} />
-          
+
           {isModalOpen && selectedStockSymbol && (
-            <StockModal
-              symbol={selectedStockSymbol}
-              closeModal={closeModal}
-            />
+            <StockModal symbol={selectedStockSymbol} closeModal={closeModal} />
           )}
         </div>
       </PortfolioProvider>

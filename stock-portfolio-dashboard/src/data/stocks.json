@@ -1,20 +1,20 @@
 [
-    {
-      "symbol": "stock1",
-      "currentPrice": 555,
-      "dailyChange": 0.1,
-      "quantityHeld": 10
-    },
-    {
-      "symbol": "stock2",
-      "currentPrice": 125,
-      "dailyChange": 1.2,
-      "quantityHeld": 5
-    },
-    {
-      "symbol": "stock3",
-      "currentPrice": 321,
-      "dailyChange": -0.3,
-      "quantityHeld": 3
-    }
-  ]
+  {
+    "symbol": "stock1",
+    "currentPrice": 555,
+    "dailyChange": 0.1,
+    "quantityHeld": 10
+  },
+  {
+    "symbol": "stock2",
+    "currentPrice": 125,
+    "dailyChange": 1.2,
+    "quantityHeld": 5
+  },
+  {
+    "symbol": "stock3",
+    "currentPrice": 321,
+    "dailyChange": -0.3,
+    "quantityHeld": 3
+  }
+]

@@ -1,6 +1,12 @@
-import React, { createContext, useState, ReactNode, useContext, useEffect } from 'react';
-import { useStockData } from './StockDataContext';
-import { Stock } from '../types/Stock';
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from "react";
+import { useStockData } from "./StockDataContext";
+import { Stock } from "../types/Stock";
 
 interface PortfolioContextType {
   portfolio: Stock[];
@@ -9,13 +15,17 @@ interface PortfolioContextType {
   removeStock: (symbol: string) => void;
 }
 
-const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
+const PortfolioContext = createContext<PortfolioContextType | undefined>(
+  undefined,
+);
 
 interface PortfolioProviderProps {
   children: ReactNode;
 }
 
-export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }) => {
+export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
+  children,
+}) => {
   const { stockData } = useStockData();
   const [portfolio, setPortfolio] = useState<Stock[]>(stockData);
 
@@ -35,21 +45,26 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
         stock.symbol === symbol
           ? {
               ...stock,
-              quantityHeld: stock.quantityHeld + quantity >= 0
-                ? stock.quantityHeld + quantity
-                : stock.quantityHeld,
+              quantityHeld:
+                stock.quantityHeld + quantity >= 0
+                  ? stock.quantityHeld + quantity
+                  : stock.quantityHeld,
             }
-          : stock
-      )
+          : stock,
+      ),
     );
   };
 
   const removeStock = (symbol: string) => {
-    setPortfolio((prevPortfolio) => prevPortfolio.filter((stock) => stock.symbol !== symbol));
+    setPortfolio((prevPortfolio) =>
+      prevPortfolio.filter((stock) => stock.symbol !== symbol),
+    );
   };
 
   return (
-    <PortfolioContext.Provider value={{ portfolio, addStock, updateStockQuantity, removeStock }}>
+    <PortfolioContext.Provider
+      value={{ portfolio, addStock, updateStockQuantity, removeStock }}
+    >
       {children}
     </PortfolioContext.Provider>
   );
@@ -58,7 +73,7 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
 export const usePortfolio = (): PortfolioContextType => {
   const context = useContext(PortfolioContext);
   if (!context) {
-    throw new Error('usePortfolio must be used within a PortfolioProvider');
+    throw new Error("usePortfolio must be used within a PortfolioProvider");
   }
   return context;
 };
