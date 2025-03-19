@@ -44,16 +44,6 @@ describe("StockModal", () => {
       expect(closeModalMock).toHaveBeenCalled();
     });
   });
-  it("shows an error if an invalid quantity is entered", async () => {
-    render(<StockModal closeModal={closeModalMock} selectedSymbol="AAPL" />);
-
-    const input = screen.getByTestId("quantity-txt");
-    fireEvent.change(input, { target: { value: "invalid" } });
-
-    const updateButton = screen.getByTestId("update-btn");
-
-    expect(updateButton).toBeDisabled();
-  });
 
   it("shows an error if quantity results in negative total", async () => {
     render(<StockModal closeModal={closeModalMock} selectedSymbol="AAPL" />);
@@ -94,5 +84,24 @@ describe("StockModal", () => {
     fireEvent.click(cancelButton);
 
     expect(closeModalMock).toHaveBeenCalled();
+  });
+
+  it("allows the user to enter a negative number using the minus sign", async () => {
+    render(<StockModal closeModal={closeModalMock} selectedSymbol="AAPL" />);
+
+    const input = screen.getByTestId("quantity-txt");
+    fireEvent.change(input, { target: { value: "-100" } });
+
+    await waitFor(() => {
+      expect(input).toHaveValue("-100");
+    });
+
+    const updateButton = screen.getByTestId("update-btn");
+    fireEvent.click(updateButton);
+
+    await waitFor(() => {
+      expect(updateStockQuantityMock).toHaveBeenCalledWith("AAPL", -100);
+      expect(closeModalMock).toHaveBeenCalled();
+    });
   });
 });

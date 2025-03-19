@@ -12,7 +12,7 @@ const StockModal: React.FC<StockModalProps> = ({
 }) => {
   const { portfolio, updateStockQuantity, getCurrentQuantity } = usePortfolio();
   const [symbol, setSymbol] = useState<string>(selectedSymbol);
-  const [quantity, setQuantity] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number | string>(0);
   const [validSymbol, setValidSymbol] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
@@ -27,8 +27,15 @@ const StockModal: React.FC<StockModalProps> = ({
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const value = e.target.value;
-    const parsedValue = value ? parseInt(value, 10) : 0;
-    setQuantity(parsedValue);
+    let parsedValue = "";
+
+    if (value.startsWith("0-") || value.startsWith("-0")) {
+      setQuantity("-");
+    }
+
+    if (/^-?\d*$/.test(value)) {
+      setQuantity(value === "" ? "0" : value);
+    }
   };
 
   const handleQuantitySubmit = () => {
@@ -39,21 +46,18 @@ const StockModal: React.FC<StockModalProps> = ({
       return;
     }
 
-    if (isNaN(quantity)) {
-      setError("Invalid quantity.");
-      return;
+    if (quantity !== "-") {
+      const updatedQuantity =
+        currentQuantity !== null ? currentQuantity! + quantity : 0;
+
+      if (eval(`${updatedQuantity}`.replace(/^0+/, "") || "0") < 0) {
+        setError("Cannot have negative stock quantity.");
+        return;
+      }
+
+      updateStockQuantity(symbol, Number(quantity));
+      closeModal();
     }
-
-    const updatedQuantity =
-      currentQuantity !== null ? currentQuantity! + quantity : 0;
-
-    if (updatedQuantity < 0) {
-      setError("Cannot have negative stock quantity.");
-      return;
-    }
-
-    updateStockQuantity(symbol, quantity);
-    closeModal();
   };
 
   return (
@@ -84,14 +88,13 @@ const StockModal: React.FC<StockModalProps> = ({
         )}
 
         <input
-          type="number"
+          type="text"
           value={quantity}
           onChange={handleQuantityInputChange}
           data-testid="quantity-txt"
           placeholder="Enter quantity (positive for buy, negative for sell)"
         />
 
-        {/* Display current stock quantity if selectedSymbol is set */}
         {selectedSymbol && (
           <>
             <p>Current Symbol: {selectedSymbol}</p>
@@ -99,19 +102,13 @@ const StockModal: React.FC<StockModalProps> = ({
           </>
         )}
 
-        {/* Display error if any */}
         {error && (
           <p data-testid="error-p" style={{ color: "red" }}>
             {error}
           </p>
         )}
 
-        {/* Action buttons */}
-        <button
-          onClick={handleQuantitySubmit}
-          disabled={quantity === 0}
-          data-testid="update-btn"
-        >
+        <button onClick={handleQuantitySubmit} data-testid="update-btn">
           Update
         </button>
         <button onClick={closeModal} data-testid="cancel-btn">

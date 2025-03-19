@@ -32,22 +32,24 @@ const StockTable: React.FC<StockTableProps> = ({ openModal }) => {
                 <td>{stock.currentPrice}</td>
                 <td>{stock.dailyChange.toFixed(2)}%</td>
                 <td>{stock.quantityHeld}</td>
-                <div className="button-container">
-                  <button
-                    name={`buy_sell_${stock.symbol}`}
-                    data-testid="buy_sell_button"
-                    onClick={() => openModal(stock.symbol)}
-                  >
-                    Buy/Sell
-                  </button>
-                  <button
-                    name={`remove_${stock.symbol}`}
-                    data-testid="remove-btn"
-                    onClick={() => removeStock(stock.symbol)}
-                  >
-                    Remove
-                  </button>
-                </div>
+                <td>
+                  <div className="button-container">
+                    <button
+                      name={`buy_sell_${stock.symbol}`}
+                      data-testid="buy_sell_button"
+                      onClick={() => openModal(stock.symbol)}
+                    >
+                      Buy/Sell
+                    </button>
+                    <button
+                      name={`remove_${stock.symbol}`}
+                      data-testid="remove-btn"
+                      onClick={() => removeStock(stock.symbol)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))
           )}
