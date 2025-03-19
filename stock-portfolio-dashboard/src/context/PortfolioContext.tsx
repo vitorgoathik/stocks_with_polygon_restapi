@@ -13,6 +13,7 @@ interface PortfolioContextType {
   addStock: (symbol: string, quantity: number) => void;
   updateStockQuantity: (symbol: string, quantity: number) => void;
   removeStock: (symbol: string) => void;
+  getCurrentQuantity: (symbol: string) => void;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(
@@ -55,6 +56,12 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
     );
   };
 
+  const getCurrentQuantity = (symbol: string) => {
+    const stock = portfolio.find((stock) => stock.symbol === symbol);
+    //TODO could fetch fresh value from api
+    return stock ? stock.quantityHeld : null;
+  };
+
   const removeStock = (symbol: string) => {
     setPortfolio((prevPortfolio) =>
       prevPortfolio.filter((stock) => stock.symbol !== symbol),
@@ -63,7 +70,13 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({
 
   return (
     <PortfolioContext.Provider
-      value={{ portfolio, addStock, updateStockQuantity, removeStock }}
+      value={{
+        portfolio,
+        addStock,
+        updateStockQuantity,
+        removeStock,
+        getCurrentQuantity,
+      }}
     >
       {children}
     </PortfolioContext.Provider>

@@ -33,6 +33,7 @@ const App: React.FC = () => {
           <button
             className="update-stock-button"
             onClick={openModalWithSymbolInput}
+            data-testid="update-stock-btn"
           >
             Update Stock Quantity
           </button>
